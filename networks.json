@@ -1,0 +1,7 @@
+{
+  "goerli": {
+    "SubgraphBridgeManager": {
+      "address": "0x3400c53765e027fadd938276d4e3f024abe6e689"
+    }
+  }
+}

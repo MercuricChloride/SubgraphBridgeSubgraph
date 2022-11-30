@@ -1,0 +1,41 @@
+type QueryResultFinalized @entity(immutable: true) {
+  id: Bytes!
+  subgraphBridgeID: Bytes! # bytes32
+  requestCID: Bytes! # bytes32
+  response: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SubgraphBridgeCreation @entity(immutable: true) {
+  id: Bytes!
+  bridgeCreator: Bytes! # address
+  subgraphBridgeId: Bytes! # bytes32
+  subgraphDeploymentID: Bytes! # bytes32
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SubgraphQueryDisputeCreated @entity(immutable: true) {
+  id: Bytes!
+  subgraphBridgeID: Bytes! # bytes32
+  requestCID: Bytes! # bytes32
+  disputeID: Bytes! # bytes32
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SubgraphResponseAdded @entity(immutable: true) {
+  id: Bytes!
+  queryBridger: Bytes! # address
+  subgraphBridgeID: Bytes! # bytes32
+  subgraphDeploymentID: Bytes! # bytes32
+  response: String! # string
+  attestationData: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
