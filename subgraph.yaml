@@ -1,0 +1,32 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: SubgraphBridgeManager
+    network: goerli
+    source:
+      address: "0x4a2Af74eF61fD259d79935161d9f619Bd45A7FDA"
+      abi: SubgraphBridgeManager
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - QueryResultFinalized
+        - SubgraphBridgeCreation
+        - SubgraphQueryDisputeCreated
+        - SubgraphResponseAdded
+      abis:
+        - name: SubgraphBridgeManager
+          file: ./abis/SubgraphBridgeManager.json
+      eventHandlers:
+        - event: QueryResultFinalized(bytes32,bytes32,string)
+          handler: handleQueryResultFinalized
+        - event: SubgraphBridgeCreation(address,bytes32,bytes32,bytes,bytes,uint256,uint208,uint16,uint256)
+          handler: handleSubgraphBridgeCreation
+        - event: SubgraphQueryDisputeCreated(indexed bytes32,indexed bytes32,bytes32)
+          handler: handleSubgraphQueryDisputeCreated
+        - event: SubgraphResponseAdded(address,bytes32,bytes32,string,bytes)
+          handler: handleSubgraphResponseAdded
+      file: ./src/subgraph-bridge-manager.ts

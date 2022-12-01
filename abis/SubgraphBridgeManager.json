@@ -1,0 +1,555 @@
+[
+  {
+    "inputs": [
+      { "internalType": "address", "name": "staking", "type": "address" },
+      { "internalType": "address", "name": "disputeManager", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "subgraphBridgeID",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "requestCID",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "response",
+        "type": "string"
+      }
+    ],
+    "name": "QueryResultFinalized",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "bridgeCreator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "subgraphBridgeId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "subgraphDeploymentID",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "queryFirstChunk",
+        "type": "bytes"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "queryLastChunk",
+        "type": "bytes"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "responseDataType",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint208",
+        "name": "proposalFreezePeriod",
+        "type": "uint208"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint16",
+        "name": "responseDataOffset",
+        "type": "uint16"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "minimumSlashableGRT",
+        "type": "uint256"
+      }
+    ],
+    "name": "SubgraphBridgeCreation",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "subgraphBridgeID",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "requestCID",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "disputeID",
+        "type": "bytes32"
+      }
+    ],
+    "name": "SubgraphQueryDisputeCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "queryBridger",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "subgraphBridgeID",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "subgraphDeploymentID",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "response",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "attestationData",
+        "type": "bytes"
+      }
+    ],
+    "name": "SubgraphResponseAdded",
+    "type": "event"
+  },
+  {
+    "inputs": [{ "internalType": "string", "name": "s", "type": "string" }],
+    "name": "_bytes32FromHex",
+    "outputs": [
+      { "internalType": "bytes32", "name": "result", "type": "bytes32" }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "string", "name": "fullString", "type": "string" },
+      { "internalType": "uint16", "name": "dataOffset", "type": "uint16" }
+    ],
+    "name": "_bytes32FromString",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint8", "name": "c", "type": "uint8" }],
+    "name": "_fromHexChar",
+    "outputs": [
+      { "internalType": "uint8", "name": "_rawByte", "type": "uint8" }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_blockhash", "type": "bytes32" },
+      {
+        "internalType": "bytes32",
+        "name": "_subgraphBridgeId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "_generateQueryRequestCID",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "queryFirstChunk",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "queryLastChunk",
+            "type": "bytes"
+          },
+          {
+            "internalType": "enum SubgraphBridgeManagerHelpers.BridgeDataType",
+            "name": "responseDataType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "subgraphDeploymentID",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint208",
+            "name": "proposalFreezePeriod",
+            "type": "uint208"
+          },
+          {
+            "internalType": "uint16",
+            "name": "responseDataOffset",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minimumSlashableGRT",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct SubgraphBridgeManagerHelpers.SubgraphBridge",
+        "name": "subgraphBridge",
+        "type": "tuple"
+      }
+    ],
+    "name": "_subgraphBridgeID",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes", "name": "bString", "type": "bytes" },
+      { "internalType": "uint256", "name": "offset", "type": "uint256" }
+    ],
+    "name": "_uintFromByteString",
+    "outputs": [
+      { "internalType": "uint256", "name": "value", "type": "uint256" },
+      { "internalType": "uint256", "name": "depth", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "string", "name": "str", "type": "string" },
+      { "internalType": "uint256", "name": "offset", "type": "uint256" }
+    ],
+    "name": "_uintFromString",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "subgraphBridgeID",
+        "type": "bytes32"
+      },
+      { "internalType": "string", "name": "response", "type": "string" },
+      { "internalType": "bytes", "name": "attestationData", "type": "bytes" }
+    ],
+    "name": "certifySubgraphResponse",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "queryFirstChunk",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "queryLastChunk",
+            "type": "bytes"
+          },
+          {
+            "internalType": "enum SubgraphBridgeManagerHelpers.BridgeDataType",
+            "name": "responseDataType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "subgraphDeploymentID",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint208",
+            "name": "proposalFreezePeriod",
+            "type": "uint208"
+          },
+          {
+            "internalType": "uint16",
+            "name": "responseDataOffset",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minimumSlashableGRT",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct SubgraphBridgeManagerHelpers.SubgraphBridge",
+        "name": "subgraphBridge",
+        "type": "tuple"
+      }
+    ],
+    "name": "createSubgraphBridge",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "requestCID", "type": "bytes32" }
+    ],
+    "name": "isQueryDisputed",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes", "name": "_data", "type": "bytes" }],
+    "name": "parseAttestation",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "requestCID",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "responseCID",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "subgraphDeploymentID",
+            "type": "bytes32"
+          },
+          { "internalType": "bytes32", "name": "r", "type": "bytes32" },
+          { "internalType": "bytes32", "name": "s", "type": "bytes32" },
+          { "internalType": "uint8", "name": "v", "type": "uint8" }
+        ],
+        "internalType": "struct IDisputeManager.Attestation",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "blockNumber", "type": "uint256" }
+    ],
+    "name": "pinBlockHash",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "name": "pinnedBlocks",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "blockNumber", "type": "uint256" },
+      {
+        "internalType": "bytes32",
+        "name": "subgraphBridgeID",
+        "type": "bytes32"
+      },
+      { "internalType": "string", "name": "response", "type": "string" },
+      { "internalType": "bytes", "name": "attestationData", "type": "bytes" }
+    ],
+    "name": "postSubgraphResponse",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "blockHash", "type": "bytes32" },
+      {
+        "internalType": "bytes32",
+        "name": "subgraphBridgeID",
+        "type": "bytes32"
+      },
+      { "internalType": "string", "name": "response", "type": "string" },
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "requestCID",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "responseCID",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "subgraphDeploymentID",
+            "type": "bytes32"
+          },
+          { "internalType": "bytes32", "name": "r", "type": "bytes32" },
+          { "internalType": "bytes32", "name": "s", "type": "bytes32" },
+          { "internalType": "uint8", "name": "v", "type": "uint8" }
+        ],
+        "internalType": "struct IDisputeManager.Attestation",
+        "name": "attestation",
+        "type": "tuple"
+      }
+    ],
+    "name": "queryAndResponseMatchAttestation",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "", "type": "bytes32" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "name": "queryDisputes",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "", "type": "bytes32" },
+      { "internalType": "bytes32", "name": "", "type": "bytes32" }
+    ],
+    "name": "subgraphBridgeData",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "", "type": "bytes32" },
+      { "internalType": "bytes32", "name": "", "type": "bytes32" }
+    ],
+    "name": "subgraphBridgeProposals",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "attestationStake",
+            "type": "uint256"
+          },
+          { "internalType": "uint256", "name": "tokenStake", "type": "uint256" }
+        ],
+        "internalType": "struct SubgraphBridgeManagerHelpers.BridgeStakeTokens",
+        "name": "totalStake",
+        "type": "tuple"
+      },
+      { "internalType": "uint256", "name": "proposalCount", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "name": "subgraphBridges",
+    "outputs": [
+      { "internalType": "bytes", "name": "queryFirstChunk", "type": "bytes" },
+      { "internalType": "bytes", "name": "queryLastChunk", "type": "bytes" },
+      {
+        "internalType": "enum SubgraphBridgeManagerHelpers.BridgeDataType",
+        "name": "responseDataType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "subgraphDeploymentID",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint208",
+        "name": "proposalFreezePeriod",
+        "type": "uint208"
+      },
+      {
+        "internalType": "uint16",
+        "name": "responseDataOffset",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minimumSlashableGRT",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "theGraphDisputeManager",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "theGraphStaking",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "data", "type": "bytes32" }
+    ],
+    "name": "toHexBytes",
+    "outputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }],
+    "stateMutability": "pure",
+    "type": "function"
+  }
+]
