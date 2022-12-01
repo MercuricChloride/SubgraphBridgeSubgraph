@@ -13,8 +13,8 @@ type SubgraphBridgeCreation @entity(immutable: true) {
   bridgeCreator: Bytes! # address
   subgraphBridgeId: Bytes! # bytes32
   subgraphDeploymentID: Bytes! # bytes32
-  queryFirstChunk: Bytes! # bytes
-  queryLastChunk: Bytes! # bytes
+  queryFirstChunk: String! # bytes
+  queryLastChunk: String! # bytes
   responseDataType: BigInt! # uint256
   proposalFreezePeriod: BigInt! # uint208
   responseDataOffset: Int! # uint16

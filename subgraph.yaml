@@ -8,6 +8,7 @@ dataSources:
     source:
       address: "0x4a2Af74eF61fD259d79935161d9f619Bd45A7FDA"
       abi: SubgraphBridgeManager
+      startBlock: 8055532
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
