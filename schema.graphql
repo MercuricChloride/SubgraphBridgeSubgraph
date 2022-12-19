@@ -40,8 +40,16 @@ type SubgraphResponseAdded @entity(immutable: true) {
   subgraphBridgeID: Bytes! # bytes32
   subgraphDeploymentID: Bytes! # bytes32
   response: String! # string
+  unlocksAt: BigInt! # timestamp of when the response can be certified
   attestationData: Bytes! # bytes
+  requestCID: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+}
+
+type QueryBridger @entity {
+  id: String! # always 0
+  users: [Bytes!]! # address[]
+  merkleRoot: Bytes # bytes32
 }
