@@ -89,26 +89,41 @@ function getOrCreateQueryBridger(): QueryBridger {
 
 function createMerkleRoot(addresses: Bytes[]): Bytes {
   if (addresses.length == 0) return Bytes.fromHexString("0x0000000000000000000000000000000000000000000000000000000000000000");
+
   if (addresses.length == 1) return Bytes.fromByteArray(crypto.keccak256(addresses[0]));
-  let leaves: Bytes[] = [];
-  // not using a map function because it isn't working right in assemblyscript
-  for (let i = 0; i < addresses.length; i++) {
-    leaves.push(Bytes.fromByteArray(crypto.keccak256(addresses[i])));
-  }
+
+  let leaves: Bytes[] = addresses.map<Bytes>((address) => {
+    log.debug("address: {}", [address.toHexString()]);
+    let hash = Bytes.fromByteArray(crypto.keccak256(address));
+    log.debug("hash: {}", [hash.toHexString()]);
+    return hash;
+  });
+
   while (leaves.length > 1) {
     let newLeaves: Bytes[] = [];
+
     for (let i = 0; i < leaves.length; i += 2) {
-      log.debug("i: {}", [i.toString()]);
       let left: Bytes = leaves[i];
-      let right: Bytes = new Bytes(0);
+
       if (i + 1 < leaves.length) {
-        right = leaves[i + 1];
+        let right: Bytes = leaves[i + 1];
+        let combined = left.concat(right);
+        log.debug("combined: {}", [combined.toHexString()]);
+        let hash = Bytes.fromByteArray(crypto.keccak256(combined));
+        log.debug("combined hash: {}", [hash.toHexString()]);
+        newLeaves.push(hash);
       } else {
-        right = left;
+        newLeaves.push(left);
       }
-      let combined = left.concat(right);
-      let hash = Bytes.fromByteArray(crypto.keccak256(combined));
-      newLeaves.push(hash);
+      // let right: Bytes = i + 1 < leaves.length ? leaves[i + 1] : left;
+
+      // let combined = left.concat(right);
+      // log.debug("combined: {}", [combined.toHexString()]);
+
+      // let hash = Bytes.fromByteArray(crypto.keccak256(combined));
+      // log.debug("combined hash: {}", [hash.toHexString()]);
+
+      // newLeaves.push(hash);
     }
 
     leaves = newLeaves;
