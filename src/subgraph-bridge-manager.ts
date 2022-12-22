@@ -104,7 +104,6 @@ function createMerkleRoot(addresses: Bytes[]): Bytes {
 
     for (let i = 0; i < leaves.length; i += 2) {
       let left: Bytes = leaves[i];
-
       if (i + 1 < leaves.length) {
         let right: Bytes = leaves[i + 1];
         let combined = left.concat(right);
@@ -115,15 +114,6 @@ function createMerkleRoot(addresses: Bytes[]): Bytes {
       } else {
         newLeaves.push(left);
       }
-      // let right: Bytes = i + 1 < leaves.length ? leaves[i + 1] : left;
-
-      // let combined = left.concat(right);
-      // log.debug("combined: {}", [combined.toHexString()]);
-
-      // let hash = Bytes.fromByteArray(crypto.keccak256(combined));
-      // log.debug("combined hash: {}", [hash.toHexString()]);
-
-      // newLeaves.push(hash);
     }
 
     leaves = newLeaves;
